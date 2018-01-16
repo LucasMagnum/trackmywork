@@ -1,5 +1,5 @@
 # Track my work
-Trackmywork is an application to help we keep track of our tasks in a simple way using the command line.
+Trackmywork is an application to help us keep track of our tasks in a simple way using the command line.
 
 One of the good habits of productivity is to keep track of every task we do and this application will help us to do it :)
 

@@ -101,17 +101,17 @@ When no `category` is given, it will use the `TRACKMYWORK_DEFAULT_CATEGORY` if i
 
 # Storage backends
 
-Our storage backends should implement the `show task`, `show tasks` and `clear` interface. 
+Our storage backends should implement the `show` and `clear` interface. 
 
 
 #### Show tasks
 We might want to see the task detail or the last tasks:
 
-    $ trackmywork show task #01
+    $ trackmywork show #01
       <storage backend response>
   
   
-    $ trackmywork show tasks --tail 10 
+    $ trackmywork show --tail 10 
       <storage backend response>
 
 
@@ -140,11 +140,11 @@ Our data is stored in columns, following this template:
 
 #### Show tasks
     
-    $ trackmywork show task #01
+    $ trackmywork show #01
     id; task message; category; project; hours; links; started_at; finished_at
     #01; "Start my task", "personal", "trackmywork", "2h", "", "2018-01-01 19:10:01", "2018-01-01 19:15:00"
 
-    $ trackmywork show tasks --tail 
+    $ trackmywork show --tail 
     id; task message; category; project; hours; links; started_at; finished_at
     #02; "Changing the task message", "personal", "trackmywork", "3h", "", "2018-01-01 19:20:00", "2018-01-01 19:35:00"
     #01; "Start my task", "personal", "trackmywork", "2h", "", "2018-01-01 19:10:01", "2018-01-01 19:15:00"

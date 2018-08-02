@@ -3,28 +3,28 @@ Trackmywork is an application to help us keep track of our tasks in a simple way
 
 One of the good habits of productivity is to keep track of every task we do and this application will help us to do it :)
 
-When I was creating the readme for my `personal` project called `trackmywork`, I planned to spend 2 hours on it. This is how I kept track of my task: 
+When I was creating the readme for my `personal` project called `trackmywork`, I planned to spend 2 hours on it. This is how I kept track of my task:
 
     $ trackmywork start -m "Creating track my work readme" -p "trackmywork" -c "personal" -t 2h
     You successfully started the task #01 - "Creating track my work readme"
 
 When I am done, I will update my task :)
-  
+
     $ trackmywork finish #01
     You successfully finished the task #01
-    
+
 or
-    
-    $ trackmywork finish 
+
+    $ trackmywork finish
     You successfully finished the last task #01
-    
-    
+
+
 ## Quick start
 
 
 ### First install it
 
-  $ go install http://github.com/lucasmagnum/trackmywork
+  $ pip install trackmywork
 
 
 ### Start a task
@@ -49,23 +49,23 @@ We should save when we `finish` the task, that way is possible to keep track of 
 
     $ trackmywork finish
     You successfully finished the last task #02
-    
+
     $ trackmywork finish #02
     You successfully finished the task #02
 
 
 ### Register a task
-We may forget to start a task, but want to `register` it anyway. 
-  
+We may forget to start a task, but want to `register` it anyway.
+
     $ trackmywork register -m "Just saving this task" -t 2h -p "test" -c "personal"
     You successfully registered the task #03
-    
+
 ### Remove a task
 We might want to `remove` a task.
 
     $ trackmywork remove #03
     Do you want to remove the #03 task? [yn]
-    
+
     You successfully removed the task #03
 
 ### Options
@@ -95,13 +95,11 @@ On my work computer, I have some default parameters to make it easier to track m
 
 So, we could set up a default category, project or storage path.
 By default, the textfile storage is used and it will be saved on "~/trackmywork.txt".
-
 When no `category` is given, it will use the `TRACKMYWORK_DEFAULT_CATEGORY` if it exists, the same for `project`.
-
 
 # Storage backends
 
-Our storage backends should implement the `show` and `clear` interface. 
+Our storage backends should implement the `show` and `clear` interface.
 
 
 #### Show tasks
@@ -109,9 +107,9 @@ We might want to see the task detail or the last tasks:
 
     $ trackmywork show #01
       <storage backend response>
-  
-  
-    $ trackmywork show --tail 10 
+
+
+    $ trackmywork show --tail 10
       <storage backend response>
 
 
@@ -120,7 +118,7 @@ We could clear all the tasks we have stored.
 
     $ trackmywork clear tasks
     Are you sure about this? [yn]
-   
+
 
 
 ## Textfile
@@ -139,12 +137,12 @@ Our data is stored in columns, following this template:
 
 
 #### Show tasks
-    
+
     $ trackmywork show #01
     id; task message; category; project; hours; links; started_at; finished_at
     #01; "Start my task", "personal", "trackmywork", "2h", "", "2018-01-01 19:10:01", "2018-01-01 19:15:00"
 
-    $ trackmywork show --tail 
+    $ trackmywork show --tail
     id; task message; category; project; hours; links; started_at; finished_at
     #02; "Changing the task message", "personal", "trackmywork", "3h", "", "2018-01-01 19:20:00", "2018-01-01 19:35:00"
     #01; "Start my task", "personal", "trackmywork", "2h", "", "2018-01-01 19:10:01", "2018-01-01 19:15:00"

@@ -1,5 +1,6 @@
 import click
 
+from core import storage
 from . import options
 
 
@@ -13,14 +14,20 @@ def command(message, time, project, category, links):
     """
     $ trackmywork start -m "Starting my task" -p "trackmywork" -c "personal" -t 2h
 
-    You successfully started the task #01 - "Starting my task"
+    You successfully started the task 1 - "Starting my task"
 
     # Adding links to a task
 
     $ trackmywork start -m "Task with links" -l "http://google.com" -t 2h
 
-    You successfully started the task #02 - "Task with links"
+    You successfully started the task 2 - "Task with links"
     """
-    click.echo("Start command")
-    click.echo(f'You successfully started the task #01 - "{message}"')
-    click.echo("%s, %s, %s, %s" % (time, project, category, links))
+    task = storage.save(
+        message=message,
+        time=time,
+        project=project,
+        category=category,
+        links=links,
+    )
+
+    click.echo(f'You successfully started the task #{task.id} - "{task.message}"')

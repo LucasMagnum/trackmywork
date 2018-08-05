@@ -10,13 +10,13 @@ When I was creating the readme for my `personal` project called `trackmywork`, I
 
 When I am done, I will update my task :)
 
-    $ trackmywork finish #01
-    You successfully finished the task #01
+    $ trackmywork finish 1
+    You successfully finished the task 1
 
 or
 
     $ trackmywork finish
-    You successfully finished the last task #01
+    You successfully finished the last task 1
 
 
 ## Quick start
@@ -31,42 +31,42 @@ or
 When we start a new task, we could use the `start` command, this task will be started and the application will keep track of the time it took to finish it.
 
     $ trackmywork start -m "Starting my task" -p "trackmywork" -c "personal" -t 2h
-    You successfully started the task #01 - "Starting my task"
+    You successfully started the task 1 - "Starting my task"
 
     # Adding links to a task
     $ trackmywork start -m "Task with links" -l "http://google.com" -t 2h
-    You successfully started the task #02
+    You successfully started the task 2
 
 ### Edit a task
 We could `edit` the task message, links or time after we create the task:
 
-    $ trackmywork edit #02 -m "Changing the task message" -t 3h -l ""
-    You edited the #02 changed message, time and links.
+    $ trackmywork edit 2 -m "Changing the task message" -t 3h -l ""
+    You edited the 2 changed message, time and links.
 
 
 ### Finish a task
 We should save when we `finish` the task, that way is possible to keep track of the time it took between the `start` and `finish`.
 
     $ trackmywork finish
-    You successfully finished the last task #02
+    You successfully finished the last task 2
 
-    $ trackmywork finish #02
-    You successfully finished the task #02
+    $ trackmywork finish 2
+    You successfully finished the task 2
 
 
 ### Register a task
 We may forget to start a task, but want to `register` it anyway.
 
     $ trackmywork register -m "Just saving this task" -t 2h -p "test" -c "personal"
-    You successfully registered the task #03
+    You successfully registered the task 3
 
 ### Remove a task
 We might want to `remove` a task.
 
-    $ trackmywork remove #03
-    Do you want to remove the #03 task? [yn]
+    $ trackmywork remove 3
+    Do you want to remove the 3 task? [yn]
 
-    You successfully removed the task #03
+    You successfully removed the task 3
 
 ### Options
 
@@ -140,9 +140,9 @@ Our data is stored in columns, following this template:
 
     $ trackmywork show #01
     id; task message; category; project; hours; links; started_at; finished_at
-    #01; "Start my task", "personal", "trackmywork", "2h", "", "2018-01-01 19:10:01", "2018-01-01 19:15:00"
+    1; "Start my task", "personal", "trackmywork", "2h", "", "2018-01-01 19:10:01", "2018-01-01 19:15:00"
 
     $ trackmywork show --tail
     id; task message; category; project; hours; links; started_at; finished_at
-    #02; "Changing the task message", "personal", "trackmywork", "3h", "", "2018-01-01 19:20:00", "2018-01-01 19:35:00"
-    #01; "Start my task", "personal", "trackmywork", "2h", "", "2018-01-01 19:10:01", "2018-01-01 19:15:00"
+    2; "Changing the task message", "personal", "trackmywork", "3h", "", "2018-01-01 19:20:00", "2018-01-01 19:35:00"
+    1; "Start my task", "personal", "trackmywork", "2h", "", "2018-01-01 19:10:01", "2018-01-01 19:15:00"

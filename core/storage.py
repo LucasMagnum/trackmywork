@@ -36,8 +36,36 @@ def _save_task_to_file(task):
         storage.write(template)
 
 
-def show():
-    pass
+def show_all(stdout, tail, limit):
+    header = ('id', 'time', 'project', 'category', 'links', 'created_at', 'finished_at')
+    show_sep = ';'
+
+    stdout.write(show_sep.join(header))
+
+    with open(config.STORAGE_PATH) as storage:
+        lines = storage.readlines()
+
+        lines = reversed(lines[-limit:]) if tail else lines[:limit]
+
+        for line in lines:
+            items = line.strip().split(sep)
+            stdout.write(show_sep.join(items))
+
+
+def show_task(stdout, task_id):
+    header = ('id', 'time', 'project', 'category', 'links', 'created_at', 'finished_at')
+    show_sep = ';'
+
+    stdout.write(show_sep.join(header))
+
+    with open(config.STORAGE_PATH) as storage:
+        for line in storage.readlines():
+            items = line.strip().split(sep)
+            id, *_ = items
+
+            if id == task_id:
+                stdout.write(show_sep.join(items))
+                break
 
 
 def _get_next_id():

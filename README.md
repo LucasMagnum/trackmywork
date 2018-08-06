@@ -138,7 +138,7 @@ Our data is stored in columns, following this template:
 
 #### Show tasks
 
-    $ trackmywork show #01
+    $ trackmywork show 1
     id; task message; category; project; hours; links; started_at; finished_at
     1; "Start my task", "personal", "trackmywork", "2h", "", "2018-01-01 19:10:01", "2018-01-01 19:15:00"
 
@@ -146,3 +146,7 @@ Our data is stored in columns, following this template:
     id; task message; category; project; hours; links; started_at; finished_at
     2; "Changing the task message", "personal", "trackmywork", "3h", "", "2018-01-01 19:20:00", "2018-01-01 19:35:00"
     1; "Start my task", "personal", "trackmywork", "2h", "", "2018-01-01 19:10:01", "2018-01-01 19:15:00"
+
+    $ trackmywork show --tail --limit 1
+    id; task message; category; project; hours; links; started_at; finished_at
+    2; "Changing the task message", "personal", "trackmywork", "3h", "", "2018-01-01 19:20:00", "2018-01-01 19:35:00"

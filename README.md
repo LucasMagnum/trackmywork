@@ -1,4 +1,6 @@
 # Track my work
+[![CircleCI](https://circleci.com/gh/LucasMagnum/trackmywork/tree/master.svg?style=svg)](https://circleci.com/gh/LucasMagnum/trackmywork/tree/master)
+
 Trackmywork is an tool to help us to keep track of our tasks in a simple way using the command line.
 
 One of the good habits of productivity is to keep track of every task we do and this tool will help us to do it :)

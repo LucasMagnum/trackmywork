@@ -23,11 +23,11 @@ def command(task_id):
         _, finished = storage.finish_task(task_id)
         message = ''
     else:
-        message = 'last'
+        message = 'last '
         task_id, finished = storage.finish_last_task()
 
     if not finished:
-        click.echo(f"The {message} task {task_id} is already finished")
+        click.echo(f"The {message}task {task_id} is already finished.")
         return
 
-    click.echo(f"The {message} task {task_id} was finished with success.")
+    click.echo(f"The {message}task {task_id} was finished with success.")

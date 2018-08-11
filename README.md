@@ -78,7 +78,7 @@ We should save when we `finish` the task, that way is possible to keep track of 
 We may forget to start a task, but want to `register` it anyway.
 
     $ trackmywork register -m "Just saving this task" -t 2h -p "test" -c "personal"
-    The task 4- "Just saving this tas" was registered with success.
+    The task 4- "Just saving this task" was registered with success.
 
 ### Remove a task
 We might want to `remove` a task.

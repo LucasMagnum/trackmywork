@@ -48,7 +48,7 @@ def edit(task_id, message, time, project, category, links):
                 new_line = [id]
 
                 for field_name, old_field, new_field in fields:
-                    if new_field and old_field != new_field:
+                    if new_field is not None and old_field != new_field:
                         fields_edited.append(field_name)
                         old_field = new_field
                     new_line.append(old_field)

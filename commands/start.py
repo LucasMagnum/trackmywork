@@ -33,4 +33,4 @@ def command(message, time, project, category, links):
         links=links,
     )
 
-    click.echo(f'The task {task.id} - "{task.message}" was started with success')
+    click.echo(f'The task {task.id} - "{task.message}" was started with success.')

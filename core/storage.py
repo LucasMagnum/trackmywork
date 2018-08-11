@@ -7,6 +7,21 @@ from core import config
 
 Task = namedtuple('Task', 'id,message,time,project,category,links,created_at,finished_at')
 sep = "#|#"
+show_sep = ';'
+
+header = ('id', 'time', 'project', 'category', 'links', 'created_at', 'finished_at')
+
+
+def clear():
+    with open(config.STORAGE_PATH) as storage:
+        lines = storage.readlines()
+
+    with open(config.STORAGE_PATH_BACKUP, 'w') as backup:
+        backup.writelines(lines)
+
+    # cleaning file
+    with open(config.STORAGE_PATH, 'w'):
+        pass
 
 
 def save(message, time, project, category, links):
@@ -17,6 +32,48 @@ def save(message, time, project, category, links):
 
     _save_task_to_file(task)
     return task
+
+
+def remove(task_id):
+    new_lines = []
+
+    with open(config.STORAGE_PATH) as storage:
+        lines = storage.readlines()
+
+        for line in lines:
+            id, *_ = line.split(sep)
+            if not task_id == id:
+                new_lines.append(line)
+
+    if len(lines) != len(new_lines):
+        with open(config.STORAGE_PATH, 'w') as storage:
+            storage.writelines(new_lines)
+
+
+def show_all(stdout, tail, limit):
+    stdout.write(show_sep.join(header))
+
+    with open(config.STORAGE_PATH) as storage:
+        lines = storage.readlines()
+
+        lines = reversed(lines[-limit:]) if tail else lines[:limit]
+
+        for line in lines:
+            items = line.strip().split(sep)
+            stdout.write(show_sep.join(items))
+
+
+def show_task(stdout, task_id):
+    stdout.write(show_sep.join(header))
+
+    with open(config.STORAGE_PATH) as storage:
+        for line in storage.readlines():
+            items = line.strip().split(sep)
+            id, *_ = items
+
+            if id == task_id:
+                stdout.write(show_sep.join(items))
+                break
 
 
 def _save_task_to_file(task):
@@ -34,38 +91,6 @@ def _save_task_to_file(task):
 
     with open(config.STORAGE_PATH, open_mode) as storage:
         storage.write(template)
-
-
-def show_all(stdout, tail, limit):
-    header = ('id', 'time', 'project', 'category', 'links', 'created_at', 'finished_at')
-    show_sep = ';'
-
-    stdout.write(show_sep.join(header))
-
-    with open(config.STORAGE_PATH) as storage:
-        lines = storage.readlines()
-
-        lines = reversed(lines[-limit:]) if tail else lines[:limit]
-
-        for line in lines:
-            items = line.strip().split(sep)
-            stdout.write(show_sep.join(items))
-
-
-def show_task(stdout, task_id):
-    header = ('id', 'time', 'project', 'category', 'links', 'created_at', 'finished_at')
-    show_sep = ';'
-
-    stdout.write(show_sep.join(header))
-
-    with open(config.STORAGE_PATH) as storage:
-        for line in storage.readlines():
-            items = line.strip().split(sep)
-            id, *_ = items
-
-            if id == task_id:
-                stdout.write(show_sep.join(items))
-                break
 
 
 def _get_next_id():

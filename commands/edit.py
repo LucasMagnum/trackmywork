@@ -2,15 +2,15 @@ import sys
 
 import click
 
-from core import config, storage
+from core import storage
 
 
 @click.command()
 @click.argument('task_id', type=str)
 @click.option('--message', '-m', help='activity message')
 @click.option('--time', '-t', help='activity time (hours)')
-@click.option('--project', '-p', default=config.DEFAULT_PROJECT, help='project this activity belongs to')
-@click.option('--category', '-c', default=config.DEFAULT_CATEGORY, help='category this activity belongs to')
+@click.option('--project', '-p', help='project this activity belongs to')
+@click.option('--category', '-c', help='category this activity belongs to')
 @click.option('--links', '-l', help='links related to this activity')
 def command(task_id, message, time, project, category, links):
     """

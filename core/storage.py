@@ -34,6 +34,16 @@ def save(message, time, project, category, links):
     return task
 
 
+def register(message, time, project, category, links):
+    task_id = _get_next_id()
+    started_at, finished_at = datetime.datetime.now(), datetime.datetime.now()
+
+    task = Task(task_id, message, time, project, category, links, started_at, finished_at)
+
+    _save_task_to_file(task)
+    return task
+
+
 def remove(task_id):
     new_lines = []
 

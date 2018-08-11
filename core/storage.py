@@ -44,6 +44,37 @@ def register(message, time, project, category, links):
     return task
 
 
+def finish_last_task():
+    last_id = _get_last_id()
+    return finish_task(last_id)
+
+
+def finish_task(task_id):
+    new_lines = []
+
+    task_finished = False
+
+    with open(config.STORAGE_PATH) as storage:
+        lines = storage.readlines()
+
+        for line in lines:
+            items = line.split(sep)
+            id, *_, finished_at = items
+
+            if task_id == id and not finished_at.strip():
+                finished_at = datetime.datetime.now()
+                items[-1] = str(finished_at) + '\n'
+                line = sep.join(items)
+                task_finished = True
+
+            new_lines.append(line)
+
+    with open(config.STORAGE_PATH, 'w') as storage:
+        storage.writelines(new_lines)
+
+    return task_id, task_finished
+
+
 def remove(task_id):
     new_lines = []
 
@@ -93,7 +124,6 @@ def show_task(stdout, task_id):
 
 def _save_task_to_file(task):
     open_mode = 'a' if _storage_file_exists() else 'w'
-
     template = (
         f"{task.id}{sep}{task.message}"
         f"{sep}{task.time}"
@@ -109,17 +139,18 @@ def _save_task_to_file(task):
 
 
 def _get_next_id():
-    if _storage_file_exists():
-        with open(config.STORAGE_PATH, 'r+') as storage:
-            return len(storage.readlines()) + 1
-    return 1
+    return str(int(_get_last_id()) + 1)
 
 
 def _get_last_id():
     if _storage_file_exists():
         with open(config.STORAGE_PATH, 'r+') as storage:
-            return len(storage.readlines())
-    return
+            readlines = storage.readlines()
+            if len(readlines):
+                last_line = readlines[-1]
+                id, *_ = last_line.split(sep)
+                return id
+    return 0
 
 
 def _storage_file_exists():

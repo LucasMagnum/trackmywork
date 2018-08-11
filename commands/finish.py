@@ -18,10 +18,13 @@ def command(task_id):
 
     You successfully finished the task 2
     """
-    if not task_id:
-        task = storage.finish_last_task()
-
-        click.echo(f"You successfully finished the last task {task.id}")
+    if task_id:
+        _, finished = storage.finish_task(task_id)
     else:
-        task = storage.finish_task(task_id)
-        click.echo(f"You successfully finished the task '{task.id}'.")
+        task_id, finished = storage.finish_last_task()
+
+    if not finished:
+        click.echo(f"The task {task_id} is already finished")
+        return
+
+    click.echo(f"The task {task_id} was finished with success.")

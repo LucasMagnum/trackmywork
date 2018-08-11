@@ -21,17 +21,18 @@ def cli():
     So, we could set up a default category or project.
     When no `category` is given, it will use the `TRACKMYWORK_DEFAULT_CATEGORY`
     if it exists, the same for `project`.
-
     """
     pass
 
 
+cli.add_command(clear.command, name="clear")
+cli.add_command(edit.command, name="edit")
+cli.add_command(finish.command, name="finish")
+cli.add_command(register.command, name="register")
+cli.add_command(remove.command, name="remove")
+cli.add_command(show.command, name="show")
+cli.add_command(start.command, name="start")
+
+
 if __name__ == '__main__':
-    cli.add_command(clear.command, name="clear")
-    cli.add_command(edit.command, name="edit")
-    cli.add_command(finish.command, name="finish")
-    cli.add_command(register.command, name="register")
-    cli.add_command(remove.command, name="remove")
-    cli.add_command(show.command, name="show")
-    cli.add_command(start.command, name="start")
     cli()

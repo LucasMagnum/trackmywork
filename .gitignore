@@ -16,5 +16,6 @@
 
 *.venv
 *.pyc
-
+*.coverage
+*.pytest_cache/
 

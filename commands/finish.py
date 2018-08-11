@@ -1,4 +1,5 @@
 import click
+import sys
 
 from core import storage
 
@@ -19,15 +20,23 @@ def command(task_id):
     $ trackmywork finish 2
     The task 2 is already finished.
     """
-    if task_id:
-        _, finished = storage.finish_task(task_id)
-        message = ''
-    else:
-        message = 'last '
-        task_id, finished = storage.finish_last_task()
+    task = storage.get_by_id(task_id) if task_id else storage.get_latest()
+
+    if not task:
+        click.echo(f"Task {task_id} not found.")
+        sys.exit(1)
+
+    finished = task.finish()
 
     if not finished:
-        click.echo(f"The {message}task {task_id} is already finished.")
-        return
+        already_finished_message = (
+            f"The {'' if task_id else 'last '}task {task.id} is already finished."
+        )
+        click.echo(already_finished_message)
+        sys.exit(1)
 
-    click.echo(f"The {message}task {task_id} was finished with success.")
+    storage.save(task)
+    success_message = (
+        f"The {'' if task_id else 'last '}task {task.id} was finished with success."
+    )
+    click.echo(success_message)

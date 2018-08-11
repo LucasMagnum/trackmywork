@@ -1,197 +1,206 @@
-import datetime
 import os
-from collections import namedtuple
+
+from typing import List
 
 from core import config
+from core.task import Task
 
 
-Task = namedtuple('Task', 'id,message,time,project,category,links,started_at,finished_at')
 sep = "#|#"
-show_sep = ';'
-
-header = ('id', 'time', 'project', 'category', 'links', 'started_at', 'finished_at')
 
 
-def clear():
+def all(limit: int, reverse: bool = False, wip: bool = False) -> List[Task]:
+    """
+    Return all tasks.
+
+    Args
+        limit       number of tasks to return
+        reverse     return tasks in reverse order
+        wip         filter the work in progress tasks
+
+    Return
+        Return a list of tasks
+    """
     with open(config.STORAGE_PATH) as storage:
         lines = storage.readlines()
 
-    with open(config.STORAGE_PATH_BACKUP, 'w') as backup:
-        backup.writelines(lines)
+    tasks = map(_convert_line_to_task, lines)
 
-    # cleaning file
-    with open(config.STORAGE_PATH, 'w'):
-        pass
+    if wip:
+        tasks = filter(lambda task: not task.finished_at, tasks)
 
+    if reverse:
+        tasks = list(tasks)[::-1]
 
-def edit(task_id, message, time, project, category, links):
-    new_lines = []
-
-    fields_edited = []
-
-    with open(config.STORAGE_PATH) as storage:
-        for line in storage.readlines():
-            items = line.split(sep)
-            id, *_ = items
-
-            if task_id == id:
-                _, old_message, old_time, old_project, old_category, old_links, *rest = items
-                fields = (
-                    ('message', old_message, message),
-                    ('time', old_time, time),
-                    ('project', old_project, project),
-                    ('category', old_category, category),
-                    ('links', old_links, links),
-                )
-
-                # Dynamically update the fields
-                new_line = [id]
-
-                for field_name, old_field, new_field in fields:
-                    if new_field is not None and old_field != new_field:
-                        fields_edited.append(field_name)
-                        old_field = new_field
-                    new_line.append(old_field)
-
-                new_line.extend(rest)
-                line = sep.join(new_line)
-
-            new_lines.append(line)
-
-    with open(config.STORAGE_PATH, 'w') as storage:
-        storage.writelines(new_lines)
-
-    return task_id, fields_edited
+    return list(tasks)[:limit]
 
 
-def save(message, time, project, category, links):
-    task_id = _get_next_id()
-    started_at = datetime.datetime.now()
-
-    task = Task(task_id, message, time, project, category, links, started_at, '')
-
-    _save_task_to_file(task)
-    return task
-
-
-def register(message, time, project, category, links):
-    task_id = _get_next_id()
-    started_at, finished_at = datetime.datetime.now(), datetime.datetime.now()
-
-    task = Task(task_id, message, time, project, category, links, started_at, finished_at)
-
-    _save_task_to_file(task)
-    return task
-
-
-def finish_last_task():
+def get_latest() -> Task:
+    """Return the last inserted task."""
     last_id = _get_last_id()
-    return finish_task(last_id)
+    return get_by_id(last_id)
 
 
-def finish_task(task_id):
+def get_by_id(task_id: str) -> Task:
+    """
+    Return a task by id.
+
+    Args
+        task_id     task id to search in the storage
+    """
+    with open(config.STORAGE_PATH) as storage:
+        lines = storage.readlines()
+
+    for line in lines:
+        task = _convert_line_to_task(line)
+
+        if task_id == task.id:
+            return task
+
+
+def save(task: Task) -> Task:
+    """
+    Insert or update a task into the storage.
+
+    Args:
+        task    a task to be inserted or updated
+
+    Return
+        The task after saving it into the storage
+    """
+    if not task.id:
+        task.id = _get_next_id()
+        _insert_new_task(task)
+    else:
+        _update_task(task)
+
+    return task
+
+
+def remove(task_id: str) -> None:
+    """Remove a task from the storage file."""
     new_lines = []
-
-    task_finished = False
 
     with open(config.STORAGE_PATH) as storage:
         lines = storage.readlines()
 
-        for line in lines:
-            items = line.split(sep)
-            id, *_, finished_at = items
+    for line in lines:
+        task = _convert_line_to_task(line)
 
-            if task_id == id and not finished_at.strip():
-                finished_at = datetime.datetime.now()
-                items[-1] = str(finished_at) + '\n'
-                line = sep.join(items)
-                task_finished = True
-
+        if not task_id == task.id:
             new_lines.append(line)
-
-    with open(config.STORAGE_PATH, 'w') as storage:
-        storage.writelines(new_lines)
-
-    return task_id, task_finished
-
-
-def remove(task_id):
-    new_lines = []
-
-    with open(config.STORAGE_PATH) as storage:
-        lines = storage.readlines()
-
-        for line in lines:
-            id, *_ = line.split(sep)
-            if not task_id == id:
-                new_lines.append(line)
 
     if len(lines) != len(new_lines):
         with open(config.STORAGE_PATH, 'w') as storage:
             storage.writelines(new_lines)
 
 
-def show_all(stdout, tail, wip, limit):
-    stdout.write(show_sep.join(header))
-
-    with open(config.STORAGE_PATH) as storage:
-        lines = storage.readlines()
-
-        lines = reversed(lines[-limit:]) if tail else lines[:limit]
-
-        for line in lines:
-            items = line.strip().split(sep)
-            *_, finished_at = items
-
-            if wip and finished_at:
-                continue
-
-            stdout.write(show_sep.join(items))
+def clear() -> None:
+    """Clear all the tasks from the storage."""
+    with open(config.STORAGE_PATH, 'w'):
+        pass
 
 
-def show_task(stdout, task_id):
-    stdout.write(show_sep.join(header))
+def _insert_new_task(task: Task) -> None:
+    """
+    Insert a new task into the storage file.
+    Create the file when it is not created.
+
+    Args:
+        task        task to be inserted
+    """
+    new_line = _convert_task_to_line(task)
+    open_mode = 'a' if _storage_file_exists() else 'w'
+
+    with open(config.STORAGE_PATH, open_mode) as storage:
+        storage.write(new_line)
+
+
+def _update_task(task: Task) -> None:
+    """Override a given task into the storage."""
+    new_lines = []
 
     with open(config.STORAGE_PATH) as storage:
         for line in storage.readlines():
-            items = line.strip().split(sep)
-            id, *_ = items
+            other_task = _convert_line_to_task(line)
 
-            if id == task_id:
-                stdout.write(show_sep.join(items))
-                break
+            if task.id == other_task.id:
+                line = _convert_task_to_line(task)
+
+            new_lines.append(line)
+
+    with open(config.STORAGE_PATH, 'w') as storage:
+        storage.writelines(new_lines)
 
 
-def _save_task_to_file(task):
-    open_mode = 'a' if _storage_file_exists() else 'w'
-    template = (
+def _get_next_id() -> str:
+    """Return the next id based on the last saved it."""
+    return str(int(_get_last_id()) + 1)
+
+
+def _get_last_id() -> str:
+    """Return the last saved it or 0."""
+    if _storage_file_exists():
+        with open(config.STORAGE_PATH, 'r+') as storage:
+            readlines = storage.readlines()
+            if len(readlines):
+                task = _convert_line_to_task(readlines[-1])
+                return task.id
+    return '0'
+
+
+def _storage_file_exists() -> bool:
+    return os.path.exists(config.STORAGE_PATH)
+
+
+def _convert_task_to_line(task: Task) -> str:
+    """
+    Convert a task instance to a line in the record file.
+
+    Args:
+        task      A task instance to be converted
+
+    Return
+        A line following the template:
+
+            {task.id}{sep}{task.message}{sep}
+            {task.time}{sep}
+            {task.project or ''}{sep}
+            {task.category or ''}{sep}
+            {task.links or ''}{sep}
+            {task.started_at or ''}{sep}
+            {task.finished_at or ''}
+    """
+    line = (
         f"{task.id}{sep}{task.message}"
         f"{sep}{task.time}"
         f"{sep}{task.project or ''}"
         f"{sep}{task.category or ''}"
         f"{sep}{task.links or ''}"
-        f"{sep}{task.started_at}"
-        f"{sep}{task.finished_at}\n"
+        f"{sep}{task.started_at or ''}"
+        f"{sep}{task.finished_at or ''}\n"
     )
-
-    with open(config.STORAGE_PATH, open_mode) as storage:
-        storage.write(template)
+    return line
 
 
-def _get_next_id():
-    return str(int(_get_last_id()) + 1)
+def _convert_line_to_task(line: str) -> Task:
+    """
+    Convert a line record to a task instance.
 
+    Args:
+        line       A record line from the storage file
 
-def _get_last_id():
-    if _storage_file_exists():
-        with open(config.STORAGE_PATH, 'r+') as storage:
-            readlines = storage.readlines()
-            if len(readlines):
-                last_line = readlines[-1]
-                id, *_ = last_line.split(sep)
-                return id
-    return 0
-
-
-def _storage_file_exists():
-    return os.path.exists(config.STORAGE_PATH)
+    Return
+        A task instance
+    """
+    id, message, time, project, category, links, started_at, finished_at = line.strip().split(sep)
+    return Task(
+        id=id,
+        message=message,
+        time=time,
+        category=category,
+        project=project,
+        links=links,
+        started_at=started_at,
+        finished_at=finished_at,
+    )

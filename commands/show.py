@@ -1,11 +1,8 @@
+import sys
+
 import click
 
 from core import storage
-
-
-class ClickStdoutAdapter:
-    def write(self, string):
-        click.echo(string)
 
 
 @click.command()
@@ -30,9 +27,36 @@ def command(task_id, tail, wip, limit):
     id;time;project;category;links;started_at;finished_at
     2;Starting a new task;2h;trackmywork;personal;;2018-08-11 14:41:39.584405;
     """
-    stdout_adapter = ClickStdoutAdapter()
-
     if task_id:
-        storage.show_task(stdout_adapter, task_id)
+        task = storage.get_by_id(task_id)
+
+        if not task:
+            click.echo(f"Task {task_id} not found.")
+            sys.exit(1)
+
+        tasks = [task]
     else:
-        storage.show_all(stdout_adapter, tail=tail, wip=wip, limit=limit)
+        tasks = storage.all(limit=limit, reverse=tail, wip=wip)
+
+    print_header()
+    for task in tasks:
+        show_task(task)
+
+
+def show_task(task, sep=';'):
+    template = (
+        f"{task.id}{sep}{task.message}"
+        f"{sep}{task.time}"
+        f"{sep}{task.project or ''}"
+        f"{sep}{task.category or ''}"
+        f"{sep}{task.links or ''}"
+        f"{sep}{task.started_at or ''}"
+        f"{sep}{task.finished_at or ''}"
+    )
+
+    click.echo(template)
+
+
+def print_header(sep=';'):
+    header = ('id', 'time', 'project', 'category', 'links', 'started_at', 'finished_at')
+    click.echo(sep.join(header))

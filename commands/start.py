@@ -23,7 +23,7 @@ def command(message, time, project, category, links):
 
     $ trackmywork start -m "Task with links" -l "http://google.com" -t 2h
 
-    You successfully started the task 2 - "Task with links"
+    The task 2 - "Task with links" was started with success.
     """
     task = storage.save(
         message=message,
@@ -33,4 +33,4 @@ def command(message, time, project, category, links):
         links=links,
     )
 
-    click.echo(f'You successfully started the task {task.id} - "{task.message}"')
+    click.echo(f'The task {task.id} - "{task.message}" was started with success')

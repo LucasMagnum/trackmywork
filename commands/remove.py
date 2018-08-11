@@ -12,10 +12,10 @@ def command(task_id):
     $ trackmywork remove 3
     Do you want to remove the task 3? [yn]
 
-    Task 3 removed with success.
+    The task 3 was removed with success.
     """
     click.confirm(f'Do you want remove the task {task_id}?', abort=True)
 
     storage.remove(task_id)
 
-    click.echo(f"Task {task_id} removed with success.")
+    click.echo(f"The task {task_id} was removed with success.")

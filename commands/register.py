@@ -16,7 +16,7 @@ def command(message, time, project, category, links):
 
     $ trackmywork register -m "Starting my task" -p "trackmywork" -c "personal" -t 2h
 
-    You successfully registered the task 1 - "Starting my task"
+    The task 1 - "Starting my task" was registered with success.
     """
     task = storage.register(
         message=message,
@@ -26,4 +26,4 @@ def command(message, time, project, category, links):
         links=links,
     )
 
-    click.echo(f'You successfully registered the task {task.id} - "{task.message}"')
+    click.echo(f'The task {task.id} - "{task.message}" was registered with success.')

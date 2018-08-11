@@ -6,17 +6,17 @@ One of the good habits of productivity is to keep track of every task we do and 
 When I was creating the readme for my `personal` project called `trackmywork`, I planned to spend 2 hours on it. This is how I kept track of my task:
 
     $ trackmywork start -m "Creating track my work readme" -p "trackmywork" -c "personal" -t 2h
-    You successfully started the task 1 - "Creating track my work readme"
+    The task 1 - "Creating track my work readme" was started with success.
 
 When I was done, I finished my task :)
 
     $ trackmywork finish 1
-    You successfully finished the task 1
+    The task 1 was finished with success.
 
 or
 
     $ trackmywork finish
-    You successfully finished the last task 1
+    The last task 1 was finished with success.
 
 
 At the end of the day, I could see how many tasks I accomplished and the tasks I was still waiting
@@ -45,34 +45,40 @@ to finish.
 When we start a new task, we could use the `start` command, this task will be started and the application will keep track of the time it took to finish it.
 
     $ trackmywork start -m "Starting my task" -p "trackmywork" -c "personal" -t 2h
-    You successfully started the task 1 - "Starting my task"
+    The task 1 - "Starting my task" was started with success.
 
     # Adding links to a task
     $ trackmywork start -m "Task with links" -l "http://google.com" -t 2h
-    You successfully started the task 2
+    The task 2 - "Task with links" was started with success.
 
 ### Edit a task
 We could `edit` the task message, links or time after we create the task:
 
     $ trackmywork edit 2 -m "Changing the task message" -t 3h -l ""
-    You edited the 2 changed message, time and links.
+    The task 2 was edited with success. Fields changed: [message, time, links]
 
 
 ### Finish a task
 We should save when we `finish` the task, that way is possible to keep track of the time it took between the `start` and `finish`.
 
+    $ trackmywork start -m "Task to finish" -p "trackmywork" -c "personal" -t 2h
+    The task 3 - "Task to finish" was started with success.
+
     $ trackmywork finish
-    You successfully finished the last task 2
+    The last task 3 was finished with success.
 
     $ trackmywork finish 2
-    You successfully finished the task 2
+    The task 2 was finished with success.
+
+    $ trackmywork finish 2
+    The task 2 is already finished.
 
 
 ### Register a task
 We may forget to start a task, but want to `register` it anyway.
 
     $ trackmywork register -m "Just saving this task" -t 2h -p "test" -c "personal"
-    You successfully registered the task 3
+    The task 4- "Just saving this tas" was registered with success.
 
 ### Remove a task
 We might want to `remove` a task.
@@ -80,7 +86,7 @@ We might want to `remove` a task.
     $ trackmywork remove 3
     Do you want to remove the 3 task? [yn]
 
-    You successfully removed the task 3
+    The task 3 was removed with success.
 
 ### Options
 

@@ -10,7 +10,6 @@ def command():
 
     $ trackmywork clear
     All tasks were deleted successfully.
-
     """
     click.confirm('Are you sure about this?', abort=True)
 

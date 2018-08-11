@@ -6,16 +6,29 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Create virtualenv
           command: |
             python3 -m venv .venv
-            . .venv/bin/activate
-            pip install -r requirements.txt
       - run:
+          name: Install requirements
           command: |
             . .venv/bin/activate
+            pip install -r requirements.txt
             pip install pytest-coverage flake8 mypy isort
+      - run:
+          name: Run lints
+          command: |
+            . .venv/bin/activate
             flake8 .
             isort -rc . --check-only
+      - run:
+          name: Run static type checker
+          command: |
+            . .venv/bin/activate
             mypy .
-            py.test .
+      - run:
+          name: Run tests
+          command: |
+            . .venv/bin/activate
+            pytest .
 

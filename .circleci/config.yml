@@ -1,0 +1,21 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6.6
+    steps:
+      - checkout
+      - run:
+          command: |
+            python3 -m venv .venv
+            . .venv/bin/activate
+            pip install -r requirements.txt
+      - run:
+          command: |
+            . .venv/bin/activate
+            pip install pytest-coverage flake8 mypy isort
+            flake8 .
+            isort -rc . --check-only
+            mypy .
+            py.test .
+

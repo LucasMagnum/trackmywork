@@ -1,10 +1,8 @@
 import os
-
-from typing import List
+from typing import Any, List
 
 from core import config
 from core.task import Task
-
 
 sep = "#|#"
 
@@ -21,18 +19,20 @@ def all(limit: int, reverse: bool = False, wip: bool = False) -> List[Task]:
     Return
         Return a list of tasks
     """
+    tasks: List[Task] = []
+
     with open(config.STORAGE_PATH) as storage:
         lines = storage.readlines()
 
-    tasks = map(_convert_line_to_task, lines)
+    tasks = [_convert_line_to_task(line) for line in lines]
 
     if wip:
-        tasks = filter(lambda task: not task.finished_at, tasks)
+        tasks = [task for task in tasks if not task.finished_at]
 
     if reverse:
-        tasks = list(tasks)[::-1]
+        tasks = tasks[::-1]
 
-    return list(tasks)[:limit]
+    return tasks[:limit]
 
 
 def get_latest() -> Task:
@@ -41,7 +41,7 @@ def get_latest() -> Task:
     return get_by_id(last_id)
 
 
-def get_by_id(task_id: str) -> Task:
+def get_by_id(task_id: str) -> Any:
     """
     Return a task by id.
 
@@ -56,6 +56,8 @@ def get_by_id(task_id: str) -> Task:
 
         if task_id == task.id:
             return task
+
+    return
 
 
 def save(task: Task) -> Task:

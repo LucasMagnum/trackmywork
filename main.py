@@ -1,6 +1,6 @@
-import click
-
 from commands import clear, edit, finish, register, remove, show, start
+
+import click
 
 
 @click.group()

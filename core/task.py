@@ -1,7 +1,6 @@
 import datetime
 import logging
-from typing import List
-
+from typing import List, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -76,7 +75,7 @@ class Task:
             return True
         return False
 
-    def edit(self, new_values: dict) -> (bool, List[str]):
+    def edit(self, new_values: dict) -> List[Tuple[str, str, str]]:
         """
         Edit a task overriding the new values.
 

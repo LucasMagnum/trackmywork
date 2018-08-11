@@ -1,6 +1,7 @@
 from click.testing import CliRunner
 
 from main import cli
+
 from core import storage
 
 

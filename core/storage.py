@@ -24,6 +24,46 @@ def clear():
         pass
 
 
+def edit(task_id, message, time, project, category, links):
+    new_lines = []
+
+    fields_edited = []
+
+    with open(config.STORAGE_PATH) as storage:
+        for line in storage.readlines():
+            items = line.split(sep)
+            id, *_ = items
+
+            if task_id == id:
+                _, old_message, old_time, old_project, old_category, old_links, *rest = items
+                fields = (
+                    ('message', old_message, message),
+                    ('time', old_time, time),
+                    ('project', old_project, project),
+                    ('category', old_category, category),
+                    ('links', old_links, links),
+                )
+
+                # Dynamically update the fields
+                new_line = [id]
+
+                for field_name, old_field, new_field in fields:
+                    if new_field and old_field != new_field:
+                        fields_edited.append(field_name)
+                        old_field = new_field
+                    new_line.append(old_field)
+
+                new_line.extend(rest)
+                line = sep.join(new_line)
+
+            new_lines.append(line)
+
+    with open(config.STORAGE_PATH, 'w') as storage:
+        storage.writelines(new_lines)
+
+    return task_id, fields_edited
+
+
 def save(message, time, project, category, links):
     task_id = _get_next_id()
     started_at = datetime.datetime.now()

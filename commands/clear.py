@@ -5,7 +5,14 @@ from core import storage
 
 @click.command()
 def command():
-    """Clear command"""
-    click.confirm('Do you want delete all the records?', abort=True)
+    """
+    Use this command to clear all the tasks from the storage.
+
+    $ trackmywork clear
+    All tasks were deleted successfully.
+
+    """
+    click.confirm('Are you sure about this?', abort=True)
 
     storage.clear()
+    click.echo('All tasks were deleted successfully.')

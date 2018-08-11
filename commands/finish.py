@@ -7,8 +7,8 @@ from core import storage
 @click.argument('task_id', type=str, required=False)
 def command(task_id):
     """
-    We should save when we `finish` the task,
-    that way is possible to keep track of the time it took between the `start` and `finish`.
+    Use this command to finish a task.
+    This will add the `finished_at` metadata to your task.
 
     $ trackmywork finish
 

@@ -5,11 +5,11 @@ from collections import namedtuple
 from core import config
 
 
-Task = namedtuple('Task', 'id,message,time,project,category,links,created_at,finished_at')
+Task = namedtuple('Task', 'id,message,time,project,category,links,started_at,finished_at')
 sep = "#|#"
 show_sep = ';'
 
-header = ('id', 'time', 'project', 'category', 'links', 'created_at', 'finished_at')
+header = ('id', 'time', 'project', 'category', 'links', 'started_at', 'finished_at')
 
 
 def clear():
@@ -26,9 +26,9 @@ def clear():
 
 def save(message, time, project, category, links):
     task_id = _get_next_id()
-    created_at = datetime.datetime.now()
+    started_at = datetime.datetime.now()
 
-    task = Task(task_id, message, time, project, category, links, created_at, '')
+    task = Task(task_id, message, time, project, category, links, started_at, '')
 
     _save_task_to_file(task)
     return task
@@ -50,7 +50,7 @@ def remove(task_id):
             storage.writelines(new_lines)
 
 
-def show_all(stdout, tail, limit):
+def show_all(stdout, tail, wip, limit):
     stdout.write(show_sep.join(header))
 
     with open(config.STORAGE_PATH) as storage:
@@ -60,6 +60,11 @@ def show_all(stdout, tail, limit):
 
         for line in lines:
             items = line.strip().split(sep)
+            *_, finished_at = items
+
+            if wip and finished_at:
+                continue
+
             stdout.write(show_sep.join(items))
 
 
@@ -85,7 +90,7 @@ def _save_task_to_file(task):
         f"{sep}{task.project or ''}"
         f"{sep}{task.category or ''}"
         f"{sep}{task.links or ''}"
-        f"{sep}{task.created_at}"
+        f"{sep}{task.started_at}"
         f"{sep}{task.finished_at}\n"
     )
 

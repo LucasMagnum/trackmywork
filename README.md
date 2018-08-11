@@ -1,14 +1,14 @@
 # Track my work
-Trackmywork is an application to help us keep track of our tasks in a simple way using the command line.
+Trackmywork is an tool to help us to keep track of our tasks in a simple way using the command line.
 
-One of the good habits of productivity is to keep track of every task we do and this application will help us to do it :)
+One of the good habits of productivity is to keep track of every task we do and this tool will help us to do it :)
 
 When I was creating the readme for my `personal` project called `trackmywork`, I planned to spend 2 hours on it. This is how I kept track of my task:
 
     $ trackmywork start -m "Creating track my work readme" -p "trackmywork" -c "personal" -t 2h
-    You successfully started the task #01 - "Creating track my work readme"
+    You successfully started the task 1 - "Creating track my work readme"
 
-When I am done, I will update my task :)
+When I was done, I finished my task :)
 
     $ trackmywork finish 1
     You successfully finished the task 1
@@ -17,6 +17,20 @@ or
 
     $ trackmywork finish
     You successfully finished the last task 1
+
+
+At the end of the day, I could see how many tasks I accomplished and the tasks I was still waiting
+to finish.
+
+    $ trackmywork show
+    id; message; category; project; hours; links; started_at; finished_at
+    1; "Creating track my work readme", "personal", "trackmywork", "2h", "", "2018-01-01 19:10:01", "2018-01-01 19:15:00"
+    2; "Updating the track my work docs", "personal", "trackmywork", "1h", "", "2018-01-01 20:00:01", "2018-01-01 20:30:00"
+    3; "Creating new examples of tasks", "personal", "trackmywork", "1h", "", "2018-01-01 21:00:01", ""
+
+    $ trackmywork show --wip
+    id; message; category; project; hours; links; started_at; finished_at
+    3; "Creating new examples of tasks", "personal", "trackmywork", "1h", "", "2018-01-01 21:00:01", ""
 
 
 ## Quick start
@@ -81,6 +95,30 @@ We might want to `remove` a task.
         -l (links)
 
 
+#### Show tasks
+
+    $ trackmywork show 1
+    id; message; category; project; hours; links; started_at; finished_at
+    1; "Start my task", "personal", "trackmywork", "2h", "", "2018-01-01 19:10:01", "2018-01-01 19:15:00"
+
+    $ trackmywork show --tail
+    id; message; category; project; hours; links; started_at; finished_at
+    2; "Changing the task message", "personal", "trackmywork", "3h", "", "2018-01-01 19:20:00", "2018-01-01 19:35:00"
+    1; "Start my task", "personal", "trackmywork", "2h", "", "2018-01-01 19:10:01", "2018-01-01 19:15:00"
+
+    $ trackmywork show --tail --limit 1
+    id; message; category; project; hours; links; started_at; finished_at
+    2; "Changing the task message", "personal", "trackmywork", "3h", "", "2018-01-01 19:20:00", "2018-01-01 19:35:00"
+
+
+#### Clear tasks
+We could clear all the tasks we have stored.
+
+    $ trackmywork clear
+    Are you sure about this? [yn]
+    All tasked were deleted successfully.
+
+
 ## Configurations
 
 All configurations are stored in environment variables, we could change the behavior of the tracker using these configurations.
@@ -91,62 +129,25 @@ On my work computer, I have some default parameters to make it easier to track m
     export TRACKMYWORK_DEFAULT_PROJECT="myproject"
 
     export TRACKMYWORK_DEFAULT_STORAGE="textfile"
-    export TRACKMYWORK_STORAGE_PATH="/home/lucasmagnum/mywork.txt"
 
 So, we could set up a default category, project or storage path.
-By default, the textfile storage is used and it will be saved on "~/trackmywork.txt".
 When no `category` is given, it will use the `TRACKMYWORK_DEFAULT_CATEGORY` if it exists, the same for `project`.
 
 # Storage backends
 
-Our storage backends should implement the `show` and `clear` interface.
-
-
-#### Show tasks
-We might want to see the task detail or the last tasks:
-
-    $ trackmywork show #01
-      <storage backend response>
-
-
-    $ trackmywork show --tail 10
-      <storage backend response>
-
-
-#### Clear tasks
-We could clear all the tasks we have stored.
-
-    $ trackmywork clear tasks
-    Are you sure about this? [yn]
-
-
-
 ## Textfile
+By default, the textfile storage is used and it will be saved on "/home/user/trackmywork.txt".
 
 ### Configurations
 
     TRACKMYWORK_DEFAULT_STORAGE="textfile"
-    TRACKMYWORK_STORAGE_PATH="/home/lucasmagnum/mywork.txt"
+    TRACKMYWORK_STORAGE_PATH="/home/username/mywork.txt"
 
 
 ### Interface
 
 Our data is stored in columns, following this template:
 
-    id; task message; category; project; hours; links; started_at; finished_at
+    id; message; time; category; project; links; started_at; finished_at
 
 
-#### Show tasks
-
-    $ trackmywork show 1
-    id; task message; category; project; hours; links; started_at; finished_at
-    1; "Start my task", "personal", "trackmywork", "2h", "", "2018-01-01 19:10:01", "2018-01-01 19:15:00"
-
-    $ trackmywork show --tail
-    id; task message; category; project; hours; links; started_at; finished_at
-    2; "Changing the task message", "personal", "trackmywork", "3h", "", "2018-01-01 19:20:00", "2018-01-01 19:35:00"
-    1; "Start my task", "personal", "trackmywork", "2h", "", "2018-01-01 19:10:01", "2018-01-01 19:15:00"
-
-    $ trackmywork show --tail --limit 1
-    id; task message; category; project; hours; links; started_at; finished_at
-    2; "Changing the task message", "personal", "trackmywork", "3h", "", "2018-01-01 19:20:00", "2018-01-01 19:35:00"
